@@ -98,7 +98,9 @@ def select_feat(train_data, valid_data, test_data, select_all=True):
     if select_all:
         feat_idx = list(range(raw_x_train.shape[1]))
     else:
-        feat_idx = [0, 1, 2, 3, 4]  # TODO: Select suitable feature columns.
+        allnum = list(range(0, 200))
+        # TODO: Select suitable feature columns.
+        feat_idx = allnum[1:117]
 
     return raw_x_train[:, feat_idx], raw_x_valid[:, feat_idx], raw_x_test[:, feat_idx], y_train, y_valid
 
@@ -172,7 +174,7 @@ def trainer(train_loader, valid_loader, model, config, device):
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 config = {
     'seed': 5201314,      # Your seed number, you can pick your lucky number. :)
-    'select_all': True,   # Whether to use all features.
+    'select_all': False,   # Whether to use all features.
     'valid_ratio': 0.2,   # validation_size = train_size * valid_ratio
     'n_epochs': 3000,     # Number of epochs.
     'batch_size': 256,
