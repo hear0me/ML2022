@@ -126,7 +126,9 @@ class BasicBlock(nn.Module):
         super(BasicBlock, self).__init__()
 
         self.block = nn.Sequential(
+            nn.BatchNorm1d(input_dim),
             nn.Linear(input_dim, output_dim),
+            nn.Dropout(0.2),
             nn.ReLU(),
         )
 
@@ -151,7 +153,7 @@ class Classifier(nn.Module):
 
 
 # data prarameters
-concat_nframes = 11              # the number of frames to concat with, n must be odd (total 2k+1 = n frames)
+concat_nframes = 21              # the number of frames to concat with, n must be odd (total 2k+1 = n frames)
 train_ratio = 0.8               # the ratio of data used for training, the rest will be used for validation
 
 # training parameters
@@ -163,7 +165,7 @@ model_path = './model.ckpt'     # the path where the checkpoint will be saved
 
 # model parameters
 input_dim = 39 * concat_nframes # the input dim of the model, you should not change the value
-hidden_layers = 6               # the number of hidden layers
+hidden_layers = 10               # the number of hidden layers
 hidden_dim = 1024                # the hidden dim
 
 
