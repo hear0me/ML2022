@@ -27,6 +27,7 @@ import os
 import torch.nn as nn
 import torchvision.transforms as transforms
 from PIL import Image
+import  torchvision
 # "ConcatDataset" and "Subset" are possibly useful when doing semi-supervised learning.
 from torch.utils.data import ConcatDataset, DataLoader, Subset, Dataset
 from torchvision.datasets import DatasetFolder, VisionDataset
@@ -111,6 +112,7 @@ class Classifier(nn.Module):
         # torch.nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding)
         # torch.nn.MaxPool2d(kernel_size, stride, padding)
         # input 維度 [3, 128, 128]
+
         self.cnn = nn.Sequential(
             nn.Conv2d(3, 64, 3, 1, 1),  # [64, 128, 128]
             nn.BatchNorm2d(64),
@@ -162,14 +164,15 @@ valid_loader = DataLoader(valid_set, batch_size=batch_size, shuffle=True, num_wo
 
 # "cuda" only when GPUs are available.
 device = "cuda" if torch.cuda.is_available() else "cpu"
-
+#  device = "cpu"
 
 # The number of training epochs and patience.
 n_epochs = 100
 patience = 300  # If no improvement in 'patience' epochs, early stop
 
 # Initialize a model, and put it on the device specified.
-model = Classifier().to(device)
+# model = Classifier().to(device)
+model = torchvision.models.efficientnet_v2_m(weights=None).to(device)
 
 # For the classification task, we use cross-entropy as the measurement of performance.
 criterion = nn.CrossEntropyLoss()
@@ -290,7 +293,7 @@ test_set = FoodDataset(os.path.join(_dataset_dir,"test"), tfm=test_tfm)
 test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False, num_workers=0, pin_memory=True)
 
 
-model_best = Classifier().to(device)
+model_best = torchvision.models.efficientnet_v2_m().to(device)
 model_best.load_state_dict(torch.load(f"{_exp_name}_best.ckpt"))
 model_best.eval()
 prediction = []
